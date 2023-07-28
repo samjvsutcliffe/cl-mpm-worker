@@ -1,10 +1,21 @@
-(defsystem "cl-mpm-worker"
+(cl:in-package #:asdf-user)
+(defsystem :cl-mpm-worker
   :version "0.1.0"
   :author "Sam Sutcliffe"
   :license ""
-  :depends-on ("magicl"
+  :depends-on (:cl-mpi
+               "magicl"
                "cl-mpm"
-               "lfarm-server")
+               "unix-opts"
+               "lfarm-server"
+               "lparallel"
+               "cl-mpm/examples/slump"
+               )
+  :defsystem-depends-on (:cl-mpi-asdf-integration)
+  :class :mpi-program
+  :build-operation :static-program-op
+  :build-pathname "my-mpi-app"
+  :entry-point "cl-mpm-worker:main"
   :components ((:module "src"
                 :components
                 ((:file "main"))))
@@ -21,3 +32,20 @@
                 ((:file "main"))))
   :description "Test system for cl-mpm-worker"
   :perform (test-op (op c) (symbol-call :rove :run c)))
+
+(defsystem :cl-mpm-worker/build
+  :version "0.1.0"
+  :author "Sam Sutcliffe"
+  :license ""
+  :depends-on (:cl-mpi
+               :cl-mpm-worker
+               )
+  :defsystem-depends-on (:cl-mpi-asdf-integration)
+  :class :mpi-program
+  :build-operation :static-program-op
+  :build-pathname "my-mpi-app"
+  :entry-point "cl-mpm-worker:main"
+  :components ((:module "src"
+                :components
+                ((:file "build"))))
+  :description "")

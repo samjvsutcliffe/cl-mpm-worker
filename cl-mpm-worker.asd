@@ -15,12 +15,13 @@
   :class :mpi-program
   :build-operation :static-program-op
   :build-pathname "my-mpi-app"
-  :entry-point "cl-mpm-worker:main"
+  :entry-point "cl-mpm-worker:main-mpi"
   :components ((:module "src"
                 :components
                 ((:file "main"))))
   :description ""
-  :in-order-to ((test-op (test-op "cl-mpm-worker/tests"))))
+  ;; :in-order-to ((test-op (test-op "cl-mpm-worker/tests")))
+  )
 
 (defsystem "cl-mpm-worker/tests"
   :author "Sam Sutcliffe"

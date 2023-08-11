@@ -4,12 +4,12 @@
   :author "Sam Sutcliffe"
   :license ""
   :depends-on (:cl-mpi
-               "magicl"
-               "cl-mpm"
+               ;"magicl"
+               ;"cl-mpm"
                ;"unix-opts"
                "lfarm-server"
                "lparallel"
-               "cl-mpm/examples/slump"
+               ;"cl-mpm/examples/slump"
                )
   :defsystem-depends-on (:cl-mpi-asdf-integration)
   :class :mpi-program

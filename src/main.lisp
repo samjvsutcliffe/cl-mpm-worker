@@ -10,7 +10,8 @@
 (declaim (notinline primary-main))
 (defun primary-main ()
   (format t "Hello MPI rank 0~%")
-  (cl-mpm/examples/slump::mpi-run (cl-mpi::mpi-comm-size))
+  ;(cl-mpm/examples/slump::mpi-run (cl-mpi::mpi-comm-size))
+  (load "test-file.lisp")
   )
 
 
@@ -62,11 +63,12 @@
   ;   :long "pseudo-rank"
   ;   :arg-parser #'parse-integer)
   ; )
-  (let ((mpi-rank (cl-mpi:mpi-comm-rank))
+  (let* ((mpi-rank (cl-mpi:mpi-comm-rank))
         (port nil)
         (threads nil)
         (host (uiop/os:hostname))
         (filename "lfarm_connections")
+        (host "127.0.0.1")
         )
     ;(defparameter *port* (getf (opts:get-opts) :port))
     ;(defparameter *threads* (getf (opts:get-opts) :threads))
@@ -76,18 +78,16 @@
       (setf port 11110))
     (unless threads
       (setf threads 1))
-    (unless mpi-rank 
-      (setf mpi-rank 1))
+    ;(unless mpi-rank 
+    ;  (setf mpi-rank 1))
     ;(when *pseudo-rank*
     ;  (setf *mpi-rank* *pseudo-rank*))
     (format t "MPI rank: ~D~%" mpi-rank)
     (format t "Threads: ~D~%" threads)
     (format t "Base port port: ~D ~%" port)
     (incf port mpi-rank)
-    (format t "Binding to port: ~D ~%" port)
-    (format t "Binding to host ~A ~%" host)
     (setf lparallel:*kernel* (lparallel:make-kernel threads))
-    ;;Setup connection file
+
     (when (= mpi-rank 0)
       (with-open-file (file filename :direction :output :if-exists :supersede)
         (format file "(~%")
@@ -97,12 +97,17 @@
       (with-open-file (file filename :direction :output :if-exists :append)
         (format file ")~%")
         (force-output file)))
+
     ;;; (cl-mpm/examples/slump::mpi-run 1)
     (if (= mpi-rank 0)
         (progn
           (format t "Running primary main~%")
           (primary-main))
-        (lfarm-server:start-server "127.0.0.1" (+ port mpi-rank)))
+        (progn
+          (format t "Binding to port: ~D ~%" port)
+          (format t "Binding to host ~A ~%" host)
+          (lfarm-server:start-server host port)
+          ))
     )
   (cl-mpi:mpi-finalize)
   (uiop:quit)

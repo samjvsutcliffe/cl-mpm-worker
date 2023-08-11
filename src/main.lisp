@@ -32,6 +32,12 @@
 
 (defun main-mpi ()
   (main))
+(defun start-server (port)
+  (let ((host (uiop/os:hostname))
+        (filename "lfarm_connections"))
+    (format t "Binding to port: ~D ~%" port)
+    (format t "Binding to host ~A ~%" host)
+    (lfarm-server:start-server host port)))
 (defun main (&optional args)
   (cl-mpi:mpi-init)
   (format t "hello rank: ~D ~%" (cl-mpi:mpi-comm-rank))
@@ -70,6 +76,8 @@
       (setf port 11110))
     (unless threads
       (setf threads 1))
+    (unless mpi-rank 
+      (setf mpi-rank 1))
     ;(when *pseudo-rank*
     ;  (setf *mpi-rank* *pseudo-rank*))
     (format t "MPI rank: ~D~%" mpi-rank)
@@ -90,11 +98,11 @@
         (format file ")~%")
         (force-output file)))
     ;;; (cl-mpm/examples/slump::mpi-run 1)
-    ;(if (= mpi-rank 0)
-    ;    (progn
-    ;      (format t "Running primary main~%")
-    ;      (primary-main))
-    ;    (lfarm-server:start-server "127.0.0.1" (+ port mpi-rank)))
+    (if (= mpi-rank 0)
+        (progn
+          (format t "Running primary main~%")
+          (primary-main))
+        (lfarm-server:start-server "127.0.0.1" (+ port mpi-rank)))
     )
   (cl-mpi:mpi-finalize)
   (uiop:quit)

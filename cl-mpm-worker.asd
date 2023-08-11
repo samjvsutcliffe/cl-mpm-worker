@@ -6,7 +6,7 @@
   :depends-on (:cl-mpi
                "magicl"
                "cl-mpm"
-               "unix-opts"
+               ;"unix-opts"
                "lfarm-server"
                "lparallel"
                "cl-mpm/examples/slump"
@@ -14,13 +14,12 @@
   :defsystem-depends-on (:cl-mpi-asdf-integration)
   :class :mpi-program
   :build-operation :static-program-op
-  :build-pathname "my-mpi-app"
+  :build-pathname "mpi-worker"
   :entry-point "cl-mpm-worker:main-mpi"
   :components ((:module "src"
                 :components
                 ((:file "main"))))
   :description ""
-  ;; :in-order-to ((test-op (test-op "cl-mpm-worker/tests")))
   )
 
 (defsystem "cl-mpm-worker/tests"

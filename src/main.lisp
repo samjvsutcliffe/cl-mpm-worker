@@ -18,7 +18,7 @@
 (defun write-hostnames (filename host port)
   (loop for rank below (cl-mpi:mpi-comm-size) do
         (when (and  (= rank (cl-mpi:mpi-comm-rank))
-                    (not (= rank 0))
+                    ;; (not (= rank 0))
                     )
       (with-open-file (file filename
                             :direction :output
@@ -86,7 +86,7 @@
     (format t "Threads: ~D~%" threads)
     (format t "Base port port: ~D ~%" port)
     (incf port mpi-rank)
-    (setf lparallel:*kernel* (lparallel:make-kernel threads))
+    ;; (setf lparallel:*kernel* (lparallel:make-kernel threads))
 
     (when (= mpi-rank 0)
       (with-open-file (file filename :direction :output :if-exists :supersede)
@@ -101,6 +101,9 @@
     ;;; (cl-mpm/examples/slump::mpi-run 1)
     (if (= mpi-rank 0)
         (progn
+          (format t "Binding to port: ~D ~%" port)
+          (format t "Binding to host ~A ~%" host)
+          (lfarm-server:start-server host port :background t)
           (format t "Running primary main~%")
           (primary-main))
         (progn

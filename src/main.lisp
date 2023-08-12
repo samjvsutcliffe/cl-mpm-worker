@@ -68,7 +68,7 @@
         (threads nil)
         (host (uiop/os:hostname))
         (filename "lfarm_connections")
-        (host "127.0.0.1")
+        ;; (host "127.0.0.1")
         )
     ;(defparameter *port* (getf (opts:get-opts) :port))
     ;(defparameter *threads* (getf (opts:get-opts) :threads))

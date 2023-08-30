@@ -99,18 +99,19 @@
         (force-output file)))
 
     ;;; (cl-mpm/examples/slump::mpi-run 1)
-    (if (= mpi-rank 0)
-        (progn
-          (format t "Binding to port: ~D ~%" port)
-          (format t "Binding to host ~A ~%" host)
-          (lfarm-server:start-server host port :background t)
-          (format t "Running primary main~%")
-          (primary-main))
-        (progn
-          (format t "Binding to port: ~D ~%" port)
-          (format t "Binding to host ~A ~%" host)
-          (lfarm-server:start-server host port)
-          ))
+    ;; (if (= mpi-rank 0)
+    ;;     (progn
+    ;;       (format t "Binding to port: ~D ~%" port)
+    ;;       (format t "Binding to host ~A ~%" host)
+    ;;       (lfarm-server:start-server host port :background t)
+    ;;       (format t "Running primary main~%")
+    ;;       (primary-main))
+    ;;     (progn
+    ;;       (format t "Binding to port: ~D ~%" port)
+    ;;       (format t "Binding to host ~A ~%" host)
+    ;;       (lfarm-server:start-server host port)
+    ;;       ))
+    (primary-main)
     )
   (cl-mpi:mpi-finalize)
   (uiop:quit)
